@@ -1,9 +1,0 @@
-{
-  "routes": [
-    {
-      "src": "/webhook",
-      "methods": ["POST"],
-      "dest": "src/bot.js"
-    }
-  ]
-}
