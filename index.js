@@ -9,6 +9,9 @@ const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 if (!TELEGRAM_BOT_TOKEN || !UNSPLASH_ACCESS_KEY) {
     console.error("请设置 BOT_TOKEN 和 UNSPLASH_ACCESS_KEY 环境变量！");
     process.exit(1);
+} else {
+    console.log(TELEGRAM_BOT_TOKEN);
+    console.log(UNSPLASH_ACCESS_KEY);
 }
 
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
