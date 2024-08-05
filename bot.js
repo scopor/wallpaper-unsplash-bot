@@ -28,7 +28,7 @@ bot.onText(/\/search (.+)/, (msg, match) => {
         });
 });
 
-const webhookUrl = `https://`${process.env.WEB_HOOK_URL}`/${token}`;
+const webhookUrl = `https://${process.env.WEB_HOOK_URL}/${token}`;
 bot.setWebHook(webhookUrl);
 
 app.post(`/${token}`, (req, res) => {
