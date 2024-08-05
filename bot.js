@@ -3,8 +3,8 @@ const axios = require('axios');
 const express = require('express');
 const app = express();
 
-const token = `process.env.TELEGRAM_BOT_TOKEN`;
-const unsplashApiKey = `process.env.UNSPLASH_ACCESS_KEY`;
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const unsplashApiKey = process.env.UNSPLASH_ACCESS_KEY;
 const unsplashApiUrl = 'https://api.unsplash.com/search/photos';
 
 const bot = new TelegramBot(token, { polling: true });
@@ -28,7 +28,8 @@ bot.onText(/\/search (.+)/, (msg, match) => {
         });
 });
 
-const webhookUrl = `https://${process.env.WEB_HOOK_URL}/${token}`;
+const hook = process.env.WEB_HOOK_URL;
+const webhookUrl = `https://${hook}/${token}`;
 bot.setWebHook(webhookUrl);
 
 app.post(`/${token}`, (req, res) => {
