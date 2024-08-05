@@ -1,5 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { createApi } = require('unsplash-js');
+const express = require('express');
+
+const app = express();
 
 // 从环境变量读取 Token 和 Access Key
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -7,17 +10,21 @@ const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 // 检查环境变量是否设置
 if (!TELEGRAM_BOT_TOKEN || !UNSPLASH_ACCESS_KEY) {
-    console.error("请设置 BOT_TOKEN 和 UNSPLASH_ACCESS_KEY 环境变量！");
+    console.error("请设置 TELEGRAM_BOT_TOKEN 和 UNSPLASH_ACCESS_KEY 环境变量！");
     process.exit(1);
-} else {
-    console.log(TELEGRAM_BOT_TOKEN);
-    console.log(UNSPLASH_ACCESS_KEY);
 }
 
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN);
 const unsplash = createApi({ accessKey: UNSPLASH_ACCESS_KEY });
 
-bot.on('message', async (msg) => {
+// 设置 Webhook
+const url = `https://wallpaper-unsplash-bot.vercel.app/${TELEGRAM_BOT_TOKEN}`; // 替换为你的 Vercel URL
+bot.setWebHook(url);
+
+app.use(express.json());
+
+app.post(`/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
+    const msg = req.body.message;
     const chatId = msg.chat.id;
     const messageText = msg.text;
 
@@ -50,6 +57,9 @@ bot.on('message', async (msg) => {
             '请使用 `/photos <关键词>` 来搜索图片，例如 `/photos 猫咪` 😊'
         );
     }
+
+    res.sendStatus(200); // 发送响应以确认接收到消息
 });
 
-console.log('机器人已启动 🚀');
+// 导出处理函数
+module.exports = app;
