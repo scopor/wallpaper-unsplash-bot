@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { createApi } = require('unsplash-js');
 
 // 从环境变量读取 Token 和 Access Key
-const TELEGRAM_BOT_TOKEN = process.env.BOT_TOKEN;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 // 检查环境变量是否设置
