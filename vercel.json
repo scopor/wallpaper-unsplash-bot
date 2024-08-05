@@ -5,5 +5,11 @@
       "src": "bot.js",
       "use": "@vercel/static-build"
     }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "bot.js"
+    }
   ]
 }
