@@ -23,6 +23,11 @@ bot.setWebHook(url);
 
 app.use(express.json());
 
+// 处理根路径的 GET 请求
+app.get('/', (req, res) => {
+  res.send('欢迎使用 Telegram 图片搜索机器人！请使用 Telegram 发送消息。');
+});
+
 app.post(`/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
     const msg = req.body.message;
     const chatId = msg.chat.id;
