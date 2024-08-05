@@ -25,7 +25,7 @@ app.use(express.json());
 
 // 处理根路径的 GET 请求
 app.get('/', (req, res) => {
-  res.send('欢迎使用 Telegram 图片搜索机器人！请使用 Telegram 发送消息。');
+  res.send('欢迎使用 Telegram 图片搜索机器人！Telegram 搜索 Wallpapaer-unsplash-bot 机器人，点击开始，输入 /photos xxx 返回 5 张 xxx 相关的照片。');
 });
 
 app.post(`/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
