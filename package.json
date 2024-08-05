@@ -1,7 +1,7 @@
 {
   "name": "wallpaper-unsplash-bot",
   "version": "1.0.0",
-  "main": "bot.js",
+  "main": "index.js",
   "scripts": {
     "start": "node bot.js"
   },
@@ -10,9 +10,7 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "axios": "^1.7.3",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "node-telegram-bot-api": "^0.66.0"
+    "node-telegram-bot-api": "^0.66.0",
+    "unsplash-js": "^7.0.19"
   }
 }
