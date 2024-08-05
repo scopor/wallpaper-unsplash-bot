@@ -10,7 +10,7 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 
 // 设置Webhook
 async function setWebhook() {
-    const WEBHOOK_URL = `https://your-vercel-deployment-url/webhook`; // 替换为您的Vercel部署URL
+    const WEBHOOK_URL = `https://wallpaper-unsplash-bot.vercel.app/webhook`; // 替换为您的Vercel部署URL
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook?url=${WEBHOOK_URL}`;
     await fetch(url);
 }
