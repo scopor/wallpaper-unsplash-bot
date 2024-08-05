@@ -1,46 +1,41 @@
-import TelegramBot from 'node-telegram-bot-api';
-import fetch from 'node-fetch';
+const TelegramBot = require('node-telegram-bot-api');
+const axios = require('axios');
+const express = require('express');
+const app = express();
 
-// 从环境变量中获取Token和Unsplash API密钥
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
+const token = `process.env.TELEGRAM_BOT_TOKEN`;
+const unsplashApiKey = `process.env.UNSPLASH_ACCESS_KEY`;
+const unsplashApiUrl = 'https://api.unsplash.com/search/photos';
 
-// 创建一个Telegram Bot实例
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(token, { polling: true });
 
-// 设置Webhook
-async function setWebhook() {
-    console.log(`${TELEGRAM_BOT_TOKEN}`);
-    console.log(`${WEBHOOK_URL}`);
-    const WEBHOOK_URL = `https://wallpaper-unsplash-bot.vercel.app/webhook`; // 替换为您的Vercel部署URL
-    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook?url=${WEBHOOK_URL}`;
-    await fetch(url);
-}
-
-// 处理用户消息
-bot.on('message', async (msg) => {
-    console.log("msg:" + msg);
-    const chatId = msg.chat.id;
-    const userInput = msg.text;
-
-    // 根据用户输入获取壁纸
-    const wallpaperUrl = await getWallpaper(userInput);
-
-    if (wallpaperUrl) {
-        await bot.sendPhoto(chatId, wallpaperUrl, { caption: '这是您请求的壁纸！' });
-    } else {
-        await bot.sendMessage(chatId, '未找到相关壁纸，请尝试其他关键词。');
-    }
+bot.onText(/\/start/, (msg) => {
+    bot.sendMessage(msg.chat.id, '欢迎使用Unsplash壁纸机器人！请输入关键词搜索壁纸。');
 });
 
-// 获取壁纸的函数
-async function getWallpaper(query) {
-    const response = await fetch(`https://api.unsplash.com/photos/random?query=${query}&client_id=${UNSPLASH_ACCESS_KEY}`);
-    const data = await response.json();
-    return data.urls?.full; // 返回壁纸的URL
-}
+bot.onText(/\/search (.+)/, (msg, match) => {
+    const keyword = match[1];
+    const url = `${unsplashApiUrl}?client_id=${unsplashApiKey}&query=${keyword}&per_page=10`;
+    axios.get(url)
+        .then((response) => {
+            const photos = response.data.results;
+            const photoUrls = photos.map((photo) => photo.urls.regular);
+            bot.sendMediaGroup(msg.chat.id, photoUrls.map((url) => ({ type: 'photo', media: url })));
+        })
+        .catch((error) => {
+            console.error(error);
+            bot.sendMessage(msg.chat.id, '搜索失败，请稍后重试。');
+        });
+});
 
-// 启动应用并设置Webhook
-setWebhook().then(() => {
-    console.log('Webhook已设置');
+const webhookUrl = `https://`${process.env.WEB_HOOK_URL}`/${token}`;
+bot.setWebHook(webhookUrl);
+
+app.post(`/${token}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+});
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server listening on port ${process.env.PORT}`);
 });
