@@ -1,7 +1,7 @@
 {
   "name": "wallpaper-unsplash-bot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "bot.js",
   "type": "module",
   "scripts": {
     "start": "bot.js"
